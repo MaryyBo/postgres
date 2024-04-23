@@ -1,4 +1,4 @@
-DROP TABLE users;
+
 CREATE TABLE users (
     first_name varchar (64),
     last_name varchar (64),
@@ -10,14 +10,15 @@ CREATE TABLE users (
     height numeric(5, 2)
 )
 
-/*
- numeric ( точність, масштаб)
- точність - загальна кількість цифр в числі
- масштаб -  кфлькфсть цифр після коми
- 
- 180.55
- точність - 5 цифр
- масштаб - 2 цифри
- */
+--Як вставити дані в таблицю?
 
- 
+INSERT INTO users VALUES ('John', 'Doe', 'Тут може бути опис', 'male', 'true', '2004-09-14', 43, 1.75);
+
+-- Декілька даних одночасно 
+
+INSERT INTO users VALUES 
+('Susan', 'Doe', 'Тут може бути опис', 'female', 'true', '2001-01-19', 39, 1.55),
+('Peter', 'Doe', 'Тут може бути опис', 'male', 'true', '2002-05-18', 40, 1.95);
+
+
+INSERT INTO users VALUES ('Blake', 'Doe', 'Тут може бути опис', 'male', 'false', '2004-09-14', NULL, NULL);
