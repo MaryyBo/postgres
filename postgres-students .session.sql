@@ -41,3 +41,56 @@ ALTER TABLE products
 DROP COLUMN quantity; -- видалити колонку
 
 
+
+
+/*Створити таблицю books
+
+В книги є:
+1. Порядковий номер
+2. Автор книги
+3. Назва книги
+4. Рік випуску
+5. Видавництво
+6. Категорія
+7. Синопсис
+8. Кількість примірників
+9. Статус  -- книга видана / не видана (надрукували її чи ні)
+
+ALTER:
+
+1. Додати до таблиці обмеження, що кількість примірників (пункт 8) не може бути менше 0
+
+* 2. Додати до таблиці обмеження, що автор + назва книги не може бути пустим рядком і має бути унікальним
+
+*/
+
+CREATE TABLE books (
+    id serial PRIMARY KEY,
+    author varchar (256),
+    title varchar (256),
+    year varchar (4),
+    publisher varchar (256),
+    category varchar (200),
+    synopsis text ,
+    quantity int,
+    status boolean
+
+)
+
+DROP TABLE books;
+
+ALTER TABLE books
+ADD CONSTRAINT "quantity_more_zero" CHECK (quantity >= 0);
+
+ALTER TABLE books
+ADD CONSTRAINT "author_title_unique" UNIQUE (author, title);
+
+INSERT INTO books(author, title, quantity) VALUES
+('Оноре Де Бальзак', 'Гобсек', 1500);
+
+INSERT INTO books(author, title, quantity) VALUES
+('Оскар Уайльд', 'Портрет Доріана Грея', 0);
+
+INSERT INTO books(author, title, quantity) VALUES
+('Оноре Де Бальзак', 'Шагренева шкіра', 345);
+
