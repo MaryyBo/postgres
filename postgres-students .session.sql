@@ -1,27 +1,43 @@
 --Ключ - ознака (штучна) яка відрізняє один запис у таблиці від іншого
 --Первинний ключ (PRIMARY KEY) використов для тог, щоб ключу дати обмеження унікальності і обмеження NOT NULL
 
-/*Первинні ключі на 2 стовпці*/
+/*ALTER - для внесення змін*/
+
+CREATE TABLE products (
+    id serial PRIMARY KEY,
+    brand varchar(200) NOT NULL CHECK (brand != '') ,
+    model varchar (300) NOT NULL CHECK (model != '') ,
+    description text,
+    category varchar (200) NOT NULL CHECK (category != ''),
+    price numeric(10,2) NOT NULL CHECK (price > 0),
+    discoubted_price numeric (10,2) CHECK (discoubted_price <= price)
+)
+
+DROP TABLE products;
+
+INSERT INTO products (brand,model, category, price) VALUES 
+('Samsung', 'S10', 'smartphones', 200),
+('Iphone', '15Pro', 'smartphones', 1200),
+('Sony', '456', 'TV', 300),
+('Sony', '567', 'TV', 600)
+
+ALTER TABLE products
+ADD CONSTRAINT "unique_brand_model_pair" UNIQUE (brand, model);
 
 
-CREATE TABLE coordinates (
-    x int,
-    y int,
-    z int,
-    CONSTRAINT "unique coord" PRIMARY KEY(x,y,z)
-);
+INSERT INTO products (brand,model, category, price) VALUES 
+('Iphone', '15Pro', 'smartphones', 500) -- клон
 
---(111,22,36)
---(252,76,88)
---(111,22,36) <---- тут має повернутися помилка
+ALTER TABLE products
+ADD COLUMN quantity int;
 
-INSERT INTO coordinates VALUES 
-(111,22,36),
-(252,76,88);
+ALTER TABLE products
+ADD CONSTRAINT "product_quantity_check" CHECK (quantity >= 0);
 
-INSERT INTO coordinates VALUES 
-(111,22,36); -- Повернеться помилка
+ALTER TABLE products 
+DROP CONSTRAINT "product_quantity_check"; -- видаляем CONSTRAINT який створили раніше
 
-INSERT INTO coordinates VALUES 
-(231,45,56),
-(252,76,88); -- також звалимось на помилці на етапі аналізу
+ALTER TABLE products
+DROP COLUMN quantity; -- видалити колонку
+
+
