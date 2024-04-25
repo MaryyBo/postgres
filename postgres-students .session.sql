@@ -1,34 +1,22 @@
+CREATE TABLE messages (
+    id serial PRIMARY KEY,
+    body text NOT NULL CHECK (body != ''),
+    author varchar (256) NOT NULL CHECK (author != ''),
+    created_at timestamp DEFAULT current_timestamp,
+    is_read boolean DEFAULT false
+) 
 
-CREATE TABLE users (
-    first_name varchar (64) NOT NULL CONSTRAINT first_name_not_empty CHECK(first_name != ''),
-    last_name varchar (64) NOT NULL CONSTRAINT last_name_not_empty CHECK(last_name != ''),
-    email varchar(64) CONSTRAINT email_not_empty CHECK(email != '') UNIQUE,
-    gender varchar (30) NOT NULL CONSTRAINT gender_not_empty CHECK(gender != ''),
-    is_subscribe boolean NOT NULL,
-    birthday date CHECK (birthday <= current_date),
-    foot_size smallint,
-    height numeric(5, 2) CONSTRAINT too_high_user CHECK (height < 2.4)
-)
+DROP TABLE messages;
 
-DROP TABLE users;
+-- INSERT INTO messages VALUES ('Hello John', 'Me'); цей запис вже не спрацює!
 
--- мусорний запис 
+INSERT INTO messages(author, body) VALUES 
+    ('John', 'Hello'),
+    ('Me', 'Go for coffee'),
+    ('John', 'Go');
 
-INSERT INTO users VALUES (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO messages (id, body, author)
+VALUES ( 3, 'message text 4', 'author4');
 
--- дані 
-
-INSERT INTO users VALUES 
-('Susan', 'Doe', 'doesusan@gmail.com', 'female', 'true', '2001-01-19', 39, 1.55),
-('Peter', 'Doe', 'doeggsusan@gmail.com', 'male', 'false', '2002-05-18', 40, 1.95);
-
-INSERT INTO users VALUES ('Karen', 'Doe', 'doe@gmail.com', 'female', 'true', NULL, NULL, 2.3);
-
-INSERT INTO users VALUES ('Oleh', 'Doe', 'doeddf@gmail.com', 'female', 'true', '2024-04-06', NULL, 1.78);
-
--- Легальний запис, але теж мусорний
-
-INSERT INTO users VALUES ('', '', '', '', 'true', '1990-12-12', NULL, NULL); -- з Boolean не пройде
-
--- CONSTRAINT (Обмеження!)
-
+--Ключ - ознака (штучна) яка відрізняє один запис у таблиці від іншого
+--Первинний ключ (PRIMARY KEY) використов для тог, щоб ключу дати обмеження унікальності і обмеження NOT NULL
