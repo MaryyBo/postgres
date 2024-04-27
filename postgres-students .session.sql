@@ -1,40 +1,42 @@
-/*Реалізувати чат між юзерами*/
+/* 
+Задача : Міні ЮТУБ 
 
-CREATE TABLE chats (
+Таблиця контенту:
+-назва
+-опис
+-автор (юзер, який створив контент)
+-дата створення
+
+Таблиця Реакції:
+
+-is_liked:
+    - null - не ставив оцінку
+    - true - лайк
+    - false - дизлайк
+
+
+У контента може бути багато реакцій від користувачів
+
+ Реакції - зв'язки між користувачем та контентом   
+
+*/
+
+CREATE TABLE contents (
     id serial PRIMARY KEY,
     name varchar(256) NOT NULL CHECK (name != ''),
-    owner_id int REFERENCES users (id),
+    description text,
+    author_id int REFERENCES users (id),
     created_at timestamp DEFAULT current_timestamp
-);
-
-INSERT INTO chats (name, owner_id) VALUES  --створення чату
-('super chat', 2);
-
-
-CREATE TABLE chats_to_users (
-    chat_id int REFERENCES chats(id),
-    user_id int REFERENCES users(id),
-    join_at timestamp DEFAULT current_timestamp,
-    PRIMARY KEY (chat_id, user_id)
 )
 
-INSERT INTO chats_to_users (chat_id, user_id) VALUES -- додавання до чату учасників
-(2, 2);
-
-CREATE TABLE messages (
-     id serial PRIMARY KEY,
-     body text NOT NULL CHECK (body != ''),
-     created_at timestamp DEFAULT current_timestamp,
-     is_read boolean NOT NULL DEFAULT false,
-    --  author_id int REFERENCES chats_to_users (user_id),
-    --  chat_id int REFERENCES chats_to_users (chat_id)
-    author_id int,
-    chat_id int,
-    FOREIGN KEY (author_id, chat_id) REFERENCES chats_to_users (user_id, chat_id)
+CREATE TABLE reactions (
+    content_id int REFERENCES contents(id),
+    user_id int REFERENCES users (id),
+    is_liked boolean
 )
 
-DROP TABLE messages;
+INSERT INTO contents(name, author_id) VALUES --доравання контакту
+('Funny dogs', 3);
 
-INSERT INTO messages (body, author_id, chat_id) VALUES --додавання повідомлень до чату
-('Go for a coffee', 4, 2),
-('Go', 2, 2)
+INSERT INTO reactions  VALUES --доравання реакцій
+(1, 1, true);
