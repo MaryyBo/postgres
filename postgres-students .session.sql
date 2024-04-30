@@ -35,3 +35,9 @@ INSERT INTO products  (brand, model, price, category) VALUES
 
 INSERT INTO products  (brand, model, price, category) VALUES
 ('Ipone', '13Plus', 650, 'phones' ) RETURNING *;
+
+
+
+----
+
+DELETE FROM users WHERE id >= 10;
