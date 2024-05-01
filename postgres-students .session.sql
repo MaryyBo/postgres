@@ -1,43 +1,41 @@
--- Ключ - ознака (найчастіше штучна) яка відрізняє один запис у таблиці від іншого
--- Первинний ключ (PRIMARY KEY) - використовується для того, щоб ключу дати обмеження унікальності (UNIQUE) і обмеження NOT NULL
--- Потенційний ключ - стовпець (група стовпців) які могли стати первинним ключем, але ще не обрані як такі.
--- Зовнішній ключ (foreign key) - стовпець (група стовпців) які містять значення, які посилаються на ідентифікатори в інших таблицях
--- Каскадне видалення - якщо ви видаляєте запис у батьківській таблиці, то автоматично будуть видалені всі записи у дочірніх таблицях, які мають посилання на цей видалений запис.
--- Каскадне оновлення - якщо значення у записі батьківської таблиці змінюється, то всі відповідні записи у дочірніх таблицях автоматично змінюються згідно цих змін
 
-CREATE TABLE products_version_2(
+CREATE TABLE users (
     id serial PRIMARY KEY,
-    brand varchar (256) NOT NULL CHECK (brand !=''),
-    model varchar (256) NOT NULL CHECK (model !=''),
-    price numeric (8, 2) NOT NULL,
-    is_luxury boolean GENERATED ALWAYS AS (price > 800) STORED
+    first_name varchar (64) NOT NULL CHECK (first_name != ''),
+    last_name varchar (64) NOT NULL CHECK (last_name != ''),
+    email text NOT NULL CHECK (email != ''), -- тут ще має бути UNIQUE
+    gender varchar (30),
+    is_subscribe boolean NOT NULL,
+    birthday date CHECK (birthday <= current_date),
+    foot_size smallint,
+    height numeric (5,2) CHECK (height < 3.0)
 )
 
-INSERT INTO products_version_2 (brand, model, price)
-VALUES 
-( 'Iphone','15Pro',1300),
-( 'Samsung','S10',400),
-( 'Xiaomi','Model5',200);
+CREATE TABLE products (
+    id serial PRIMARY KEY,
+    brand varchar (200) NOT NULL CHECK (brand !=''),
+    model varchar (300) NOT NULL CHECK (model !=''),
+    description text,
+    category varchar (200) NOT NULL CHECK (category !=''),
+    price numeric (10, 2) NOT NULL CHECK (price > 0),
+    discounted_price numeric (10, 2) CHECK (discounted_price < price),
+    quantity int CHECK (quantity >= 0)
+)
+
+CREATE TABLE orders (
+    id serial PRIMARY KEY,
+    created_at timestamp NOT NULL DEFAULT current_timestamp,
+    customer_id int REFERENCES users(id)
+)
+
+--- зв'язок багато до багатьох
+
+CREATE TABLE orders_to_products ( -- orders_items
+    order_id int REFERENCES orders(id),
+    products_id int REFERENCES products(id),
+    quantity int NOT NULL DEFAULT 1,
+    PRIMARY KEY (order_id, products_id)
+)
 
 
-ALTER TABLE products
-ADD COLUMN is_luxury boolean GENERATED ALWAYS AS (price > 800) STORED
-
-UPDATE products SET price = price * 3 WHERE price < 600;
-
-----
-
-INSERT INTO products  (brand, model, price, category) VALUES
-('Xiaomi', '454545', 1000, 'phones' ) RETURNING id;
-
-INSERT INTO products  (brand, model, price, category) VALUES
-('Ipone', '14', 850, 'phones' ) RETURNING id, brand, model;
-
-INSERT INTO products  (brand, model, price, category) VALUES
-('Ipone', '13Plus', 650, 'phones' ) RETURNING *;
-
-
-
-----
-
-DELETE FROM users WHERE id >= 10;
+DELETE FROM users;
