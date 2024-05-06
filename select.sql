@@ -159,3 +159,16 @@ SELECT id, first_name, last_name, birthday, extract ("years" FROM age(birthday))
 
 ------------------------------------------------------------
 
+/*
+Задача: Вивести всіх користувачів від 2 до 10 років
+*/
+
+SELECT id, first_name, last_name, birthday, extract ("years" FROM age(birthday)) AS years FROM users
+WHERE extract  ("years" FROM age(birthday)) BETWEEN 2 AND 10;
+
+------------------------------------------------------------ 
+
+--- Aліаси (псевдоніми) - якщо кирилиця обов'язково лапки ""
+
+SELECT first_name AS "Ім'я", last_name AS "Прізвище" , id AS "Особистий номер" FROM users;
+
