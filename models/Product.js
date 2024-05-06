@@ -20,6 +20,10 @@ class Product {
         // 3. Результат запиту повернути як результат роботи методу моделі
          return rows;
     }
+
+    static async findAll() {
+        return await this._client.query(`SELECT * FROM ${this._tableName}`)
+      }
 }
 
 module.exports = Product;

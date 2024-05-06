@@ -39,3 +39,7 @@ CREATE TABLE orders_to_products ( -- orders_items
 
 
 DELETE FROM users;
+
+
+DELETE FROM orders;
+
