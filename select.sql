@@ -127,3 +127,14 @@ WHERE id BETWEEN 3000 AND 3500;
  UPDATE employees
  SET salary = salary * 1.2
  WHERE work_hours > 150;
+
+
+ ------------------------------------------------------------
+
+ INSERT INTO users (first_name, last_name, email, gender, birthday, is_subscribe) VALUES
+ ('Test', 'Testovich', 'test@gmail.com', 'male', '1800-12-12', false ) RETURNING *;
+
+ DELETE FROM users
+ WHERE id = 4001;
+
+ SELECT id, first_name FROM users WHERE first_name = 'Test';
