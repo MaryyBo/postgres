@@ -138,3 +138,24 @@ WHERE id BETWEEN 3000 AND 3500;
  WHERE id = 4001;
 
  SELECT id, first_name FROM users WHERE first_name = 'Test';
+
+------------------------------------------------------------
+
+SELECT id, first_name, last_name, birthday FROM users;
+
+UPDATE users 
+SET birthday = '2005-01-01'
+WHERE (gender = 'female' AND is_subscribe);
+
+------------------------------------------------------------
+
+/*
+Задача: Вивести всіх користувачів з інфою про них + вік
+*/
+
+SELECT id, first_name, last_name, birthday, age(birthday) FROM users; -- 1 варіант
+
+SELECT id, first_name, last_name, birthday, extract ("years" FROM age(birthday)) FROM users; -- 2 варіант
+
+------------------------------------------------------------
+
