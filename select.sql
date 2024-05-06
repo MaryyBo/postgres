@@ -111,3 +111,19 @@ WHERE id BETWEEN 3000 AND 3500;
 2. Вставити дані (INSERT) про 3 співробітників
 3. Всім співробітникам які відпрацювали за місяць більше ніж 150 год, збільшити ім зп на 20%
  */
+
+ CREATE TABLE employees(
+    id serial PRIMARY KEY,
+    name varchar (256) NOT NULL CHECK (name != ''),
+    salary int NOT NULL CHECK (salary >= 0),
+    work_hours int NOT NULL CHECK (work_hours >= 0)
+ );
+
+ INSERT INTO employees (name, salary, work_hours) VALUES
+ ('Ivanov', 400, 80),
+ ('Petrov',750, 185),
+ ('Sidorov', 0, 0)
+
+ UPDATE employees
+ SET salary = salary * 1.2
+ WHERE work_hours > 150;
