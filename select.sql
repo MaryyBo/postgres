@@ -342,3 +342,45 @@ WHERE name = 'Oleh';
 DELETE FROM workers
 WHERE extract ('years' from age(birthday)) > 30;
 
+
+-- Агрегатні функції - функції які виконують якусь операцію над групою рядків (в межах стовпця) і повертають одне єдине значення
+-- COUNT, SUM, AVG, MIN, MAX
+
+SELECT max(weight) FROM users;
+
+SELECT min(weight) FROM users;
+
+SELECT sum(weight) FROM users;
+
+SELECT avg(weight) FROM users;
+
+/*
+Задача:
+
+Підрахувати кількість записів в таблиці
+
+*/
+
+SELECT count(id) FROM users; -- передати стовпчик де немає NULL
+
+
+/*
+Задача:
+
+Знайти середню вагу окремо чоловіків та жінок
+
+*/
+
+SELECT gender, avg(weight) FROM users
+GROUP BY gender;
+
+
+--Знайти середню вагу чоловіків 
+
+SELECT avg(weight) FROM users
+WHERE gender = 'male';
+
+--Знайти середню вагу користувачів, старших за 10 років
+
+SELECT avg(weight) FROM users
+WHERE extract ('years' from age(birthday)) > 10; 
