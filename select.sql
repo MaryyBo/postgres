@@ -202,3 +202,32 @@ OFFSET 50; -- перестрибуєм  через 50 записів
 OFFSET = Limit * сторінку_яку_ми_запитуємо - 1
 */
 
+
+------------------------------------------------------------
+
+SELECT * FROM users;
+
+--Склеювання стовпців - оператор ||
+
+ SELECT id, first_name || last_name AS "full name", gender, email FROM users; --без пробілу
+  
+ SELECT id, concat(first_name, ' ', last_name) AS "full name", gender, email FROM users;
+
+------------------------------------------------------------
+
+--ПІДЗАПИТ
+
+ /*
+Задача:
+Знайти всіх користувачів, повне ім'я яких (ім'я + прізвище) < 10 символів
+*/
+
+ SELECT id, concat(first_name, ' ', last_name) AS "full name", gender, email FROM users
+ WHERE char_length(concat(first_name, ' ', last_name)) < 10
+
+
+ SELECT * FROM --основний запит
+ ( -- підзапит
+   SELECT id, concat(first_name, ' ', last_name) AS "full name", gender, email FROM users
+ ) AS "FN"
+ WHERE char_length("FN"."full name") < 10;
