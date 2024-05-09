@@ -500,3 +500,49 @@ SELECT v FROM A
 EXCEPT 
 SELECT * FROM B; -- значення з таблиці А, яких немає в таблиці B
 
+-------------------------------------------------------------
+
+-- ДЗ - Всі дії виконуються над таблицею products
+
+-- 1. Порахувати загальну кількість товарів
+
+SELECT count(*) FROM products;
+
+-- 2. Порахувати середню ціну товарів
+
+SELECT avg(price) FROM products;
+
+-- 3. Порахувати середню ціну кожного бренду (створити групу по бренду)
+
+SELECT brand, avg(price) FROM products
+GROUP BY brand
+
+-- 4. Порахувати кількість моделей кожного бренду (по суті, той же запит, що в 3 завданні, тільки агрегатна функція тут буде count)
+
+SELECT brand, count(price) FROM products
+GROUP BY brand;
+
+-- 5. Середня ціна бренду Huawei
+
+SELECT avg(price) FROM products
+WHERE brand = 'Huawei';
+
+-- 6. Це завдання для таблиці users Відсортувати юзерів за віком (спочатку за збільшенням, потім за зменшенням)
+
+SELECT * FROM users
+ORDER BY birthday ASC;
+
+
+SELECT *, extract ('years' from age(birthday))  FROM users
+ORDER BY birthday DESC;
+
+--7. Відсортуйте телефони за ціною, від найдорожчого до найдешевшого
+
+SELECT * FROM products
+ORDER BY price DESC;
+
+-- 8. Виведіть топ-5 найдорожчих телефонів
+
+SELECT * FROM products
+ORDER BY price DESC
+LIMIT 5;
