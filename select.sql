@@ -410,3 +410,33 @@ ORDER BY quantity ASC; -- сортування за збільшенням
 SELECT * FROM products
 ORDER BY quantity ASC
 LIMIT 3
+
+
+-------------------------------------------------------------
+
+/*Задача
+Зайти кількість користувачів у кожній віковій групі
+
+10 - 15000
+11 - 1000
+*/
+
+SELECT first_name, last_name, extract ('years' from age(birthday))
+FROM users;
+
+
+SELECT count (*), extract ('years' from age(birthday)) AS "вікова група"
+FROM users
+GROUP BY "вікова група"
+ORDER BY "вікова група";
+
+/*Задача
+Модифікувати таким чином, щоб залишились групи менше 380 користувачів
+
+*/
+
+SELECT count (*) AS "кількість", extract ('years' from age(birthday)) AS "вікова група"
+FROM users
+GROUP BY "вікова група"
+HAVING  count (*) < 380;
+
