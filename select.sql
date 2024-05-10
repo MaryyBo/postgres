@@ -675,3 +675,54 @@ ON u.id = o.customer_id
 GROUP BY u.id; 
 
 
+--------------------------------------------------------------
+
+INSERT INTO products (brand, model, category, price, quantity)
+VALUES ('Microsoft', '12345', 'phones', 200, 2);
+
+
+
+--------------------------------------------------------------
+
+-- HOME WORK
+/*
+Задача 1. 
+Знайти телефони, які ніхто не купував.
+Підказка. Об'єднуйте таблицю orders_to_products і таблиця products
+*/
+
+SELECT * FROM 
+products AS p LEFT JOIN orders_to_products AS otp
+ON p.id = otp.products_id
+WHERE otp.order_id IS NULL;
+
+/*
+Задача 2.
+Кількість позицій у кожному замовленні.
+Підказка. 
+Тут не потрібно JOIN. Працюємо з таблицею orders_to_products.
+Потрібно створити групу по order_id, та запустити на цій групі агрегатну функцію count
+*/
+
+SELECT order_id, count(*) FROM orders_to_products
+GROUP BY order_id;
+
+/*
+Задача 3 (***).
+Знайти найпопулярніший товар.
+Підказка.
+Учасники: products; orders_to_products
+Створити групу по id з таблиці products.
+Запустити агрегатну функцію sum по полю quantity з таблиці orders_to_products.
+*/
+
+SELECT p.id, p.brand, p.model, sum(otp.quantity) AS "customer_sum" 
+FROM products AS p 
+JOIN orders_to_products AS otp 
+ON p.id = otp.products_id
+GROUP BY p.id
+ORDER BY customer_sum DESC
+LIMIT 1;
+
+
+
