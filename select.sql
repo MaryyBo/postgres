@@ -783,10 +783,27 @@ WHERE orders_with_cost.cost > (
 Витягти всіх користувачів в яких кількість замовлень вище середнього 
 */
 
+WITH orders_with_counts AS (
+   -- кількість замовлень кожного користувача
+   SELECT customer_id, count (*) AS orders_count FROM orders
+   GROUP BY customer_id
+)
+
+SELECT * FROM 
+orders_with_counts JOIN users 
+ON users.id = orders_with_counts.customer_id
+WHERE orders_with_counts.orders_count > (
+   SELECT avg(orders_with_counts.orders_count) FROM orders_with_counts
+);
 
 /*
-Задача 3.
+Задача 4.
 Витягти користувачів та кількість товаірв, які вони замовляли (кількість замовлень * quantity)
 */
 
-
+SELECT u.id, u.first_name, u.last_name, sum (otp.quantity) AS "product_quantity" 
+FROM users AS u JOIN orders AS o
+ON u.id = o.customer_id
+JOIN orders_to_products AS otp
+ON o.id = otp.order_id
+GROUP BY u.id
