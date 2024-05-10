@@ -566,3 +566,78 @@ SELECT customer_id FROM orders;
 SELECT id FROM users
 EXCEPT
 SELECT customer_id FROM orders; 
+
+-------------------------------------------------------------
+
+-- З'єднання множин
+
+/*
+Це операція, яка об'єднує дві або більше множин в одну.
+Результатом об'єднання буде таблиця
+*/
+
+SELECT * FROM A;
+
+SELECT * FROM B;
+
+SELECT * FROM A, B
+WHERE A.v = B.v;
+
+SELECT A.v  AS "id", A.t  AS "price",  B.v AS "phone.id" 
+FROM A, B
+WHERE A.v = B.v;
+
+-- Переписуємо на JOIN
+
+SELECT A.v  AS "id", A.t  AS "price",  B.v AS "phone.id" 
+FROM A JOIN B
+ON A.v = B.v;
+
+-- Задача: Знайти всі замовлення юзера у якого id = 5
+
+SELECT *
+FROM users JOIN orders
+ON orders.customer_id = users.id
+WHERE users.id = 3456;
+
+-- 2 variant
+
+SELECT u.*, o.id AS "order_id"
+FROM users AS u JOIN orders AS o
+ON o.customer_id = u.id
+WHERE u.id = 3456;
+
+-------
+
+SELECT *
+FROM A JOIN B ON A.v = B.v
+JOIN products ON A.t = products.id;
+
+-- Знайти id всіх замовлень, де були замовлені телефони Samsung
+
+SELECT *
+FROM products JOIN orders_to_products 
+ON products.id = orders_to_products.products_id
+WHERE products.brand = 'Samsung';
+
+-- Скорочений варіант
+
+SELECT *
+FROM products AS p JOIN orders_to_products AS otp
+ON p.id = otp.products_id
+WHERE p.brand = 'Samsung';
+
+-- Модифікуйте попередній запит: Порахуйте, скільки замовлень бренду Samsung
+
+SELECT count (*)
+FROM products AS p JOIN orders_to_products AS otp
+ON p.id = otp.products_id
+WHERE p.brand = 'Samsung';
+
+-- Зробити топ продажів.Який бренд найчастіше купували
+
+SELECT brand, count (*) AS "quantity"
+FROM products AS p JOIN orders_to_products AS otp
+ON p.id = otp.products_id
+GROUP BY p.brand
+ORDER BY "quantity" DESC;
