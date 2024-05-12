@@ -3,88 +3,81 @@
 -- 3 НФ : 2 НФ + ми маємо прибрати транзитивні функціональні залежності атрибутів
 -- 4 НФ : неключові транзитивні залежності не можуть бути в складі складеного ключа
 
+/*Необхідно спроектувати БД логістичної компанії.
 
-/*
+В БД мають бути наступні таблиці.
 
--- teachers
-
--- students
-
--- subjects
-
-Обмеження:
-1 викладач може вести тільки 1 предмет
+Товари:
+- код товару
+- назва
+- ціна
 
 
--- teachers 1:m subjects
+Замовлення на поставку:
+- код замовлення
+- найменування постачальника
+- адреса постачальника
+- телефон
+- номер контракту
+- дата заключення контракту
+- найменування товару
+- план поставки (кількість в шт.)
 
-- students m:n subjects
 
--- students m:n teachers
+Фактичні відгрузки товару:
+- код відгрузки
+- код замовлення
+- дата відгрузки
+- відгружено товару (шт)
 
+
+* Уточнення з приводу відгрузок.
+Це логістична компанія.
+Уявіть, що якийсь магазин, наприклад, замовив 100 одинииць товару.
+Ви можете це замовлення поділити на декілька відгрузок.
+Наприклад, у 1 відгрузці ви цьому магазину доставляєте 50 товарів.
+У якійсь іншій відгрузці доставляєте інші 50 товарів.
+
+При проектування БД необхідно врахувати.
+1. Товар може мати декілька замовлень на постачання.
+2. Замовлення відповідає ОДНОМУ товару.
+3. Товару можуть відповідати декілька відгрузок.
+4. У одній відггрузці може бути декілька товарів.
+5. Товар не обов'язково має замволення. Кожне замовлення відповідає товару.
+6. Товар не обов'язкоо відгружається замовнику, але кожна відгрузка обов'язково відповідає певному товару.
 */
 
-CREATE TABLE students (
+CREATE TABLE products (
     id serial PRIMARY KEY,
-    name varchar (30)
-)
-
-INSERT INTO students (name) VALUES
-('Ivanov'),
-('Petrov'),
-('Sidorov')
-
-----------------------------------------------------------
-
-CREATE TABLE teachers (
-    id serial PRIMARY KEY,
-    name varchar (30),
-    subject varchar (50) REFERENCES subjects(name)
-)
-
-INSERT INTO teachers (name, subject) VALUES
-('Smirnov', 'Системи штучного інтелекту'),
-('Petrenko', 'Хмарний компьютер')
-
-
-----------------------------------------------------------
-
-CREATE TABLE students_to_teachers (
-    teacher_id int REFERENCES teachers(id),
-    students_id int REFERENCES students(id),
-    PRIMARY KEY (teacher_id, students_id)
-)
-
---Обмеження: 1 викладач може вести тільки 1 предмет
-
-INSERT INTO students_to_teachers VALUES 
-(1, 1 ),
-(1, 2 ),
-(2, 1 )
-
-----------------------------------------------------------
-
-CREATE TABLE subjects (
-    name varchar (50) PRIMARY KEY
+    name varchar(300) CHECK (name != '') NOT NULL
 );
 
-INSERT INTO subjects VALUES
-('Системи штучного інтелекту'),
-('Хмарний компьютер')
+CREATE TABLE manufacturers (
+    id serial PRIMARY KEY,
+    name varchar(400) CHECK (name != '') NOT NULL,
+    address text CHECK (address != '') NOT NULL,
+    tel_number varchar(15) (tel_number != '') NOT NULL
+);
 
------------------------------------------------------------
+CREATE TABLE orders (
+    id serial PRIMARY KEY,
+    product_id int REFERENCES products(id),
+    quantity_plan int CHECK (quantity_plan > 0) NOT NULL,
+    product_price decimal (10,2),
+    contract_number varchar(30) NOT NULL,
+    contract_address text CHECK (contract_address !='') NOT NULL,
+    contract_date date NOT NULL,
+    manufacturer_id int REFERENCES manufacturers(id)
+    );
 
+CREATE TABLE shipments (
+    id serial PRIMARY KEY,
+    order_id int REFERENCES orders(id),
+    shipment_date timestamp NOT NULL
+);
 
-/*
-
-РЕАЛІЗУВАТИ ВИТЯГ
--який студент який предмет вивчає і хто викладає предмет
-
-*/
-
-SELECT students.id, students.name,teachers.name, teachers.subject  FROM 
-students JOIN students_to_teachers
-ON students.id = students_to_teachers.students_id
-JOIN teachers
-ON students_to_teachers.teacher_id = teachers.id;
-
+CREATE  TABLE products_to_shipments (
+    product_id int REFERENCES products(id),
+    shipment_id REFERENCES shipments(id),
+    product_quantity int NOT NULL
+)
